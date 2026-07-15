@@ -1,0 +1,21 @@
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Environment and local tool output
+.env
+.env.*
+!.env.example
+playwright-report/
+test-results/
+
+# Local agent and development coordination
+/AGENTS.md
+/CLAUDE.md
+/.local/
+/case-studies/**/decision-packet.md
+
+# Pre-integration visual exploration
+/artifacts/**/candidate-*/

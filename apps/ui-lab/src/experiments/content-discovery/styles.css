@@ -1,0 +1,54 @@
+.lang-notion {
+  --notion-canvas: #fffefc;
+  --notion-sidebar: #f7f6f3;
+  --notion-subtle: #fbfaf8;
+  --notion-hover: #efeee9;
+  --notion-selected: #e9e8e3;
+  --notion-line: #e5e3de;
+  --notion-line-strong: #c8c5bd;
+  --notion-ink: #292825;
+  --notion-soft: #615f59;
+  --notion-mute: #8a877f;
+  --notion-focus: #2f6fce;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.lang-vercel {
+  --vercel-line: #dedede;
+  --vercel-subtle: #fafafa;
+  --vercel-soft: #555;
+  --vercel-mute: #777;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.vercel-grid {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.035) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.lang-pinterest {
+  --pin-canvas: #fffdf8;
+  --pin-ink: #25231f;
+  --pin-soft: #625e56;
+  --pin-mute: #837e74;
+  --pin-line: #ebe7df;
+  --pin-search: #f0ede7;
+  --pin-chip: #f3eee3;
+  --pin-hover: #e9e4da;
+  --pin-accent: #a23545;
+  --pin-focus: #5c46b8;
+  font-family: ui-rounded, "Arial Rounded MT Bold", ui-sans-serif, system-ui, sans-serif;
+}
+
+.lang-notion *, .lang-notion *::before, .lang-notion *::after,
+.lang-vercel *, .lang-vercel *::before, .lang-vercel *::after,
+.lang-pinterest *, .lang-pinterest *::before, .lang-pinterest *::after {
+  box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-notion *, .lang-vercel *, .lang-pinterest * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
