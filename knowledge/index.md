@@ -4,4 +4,6 @@
 
 ## Topics
 
-각 topic은 담당하는 지식 경계와 대표 진입 page를 함께 등록합니다.
+| Topic | 디렉터리 | 경계 | 대표 진입점 |
+| --- | --- | --- | --- |
+| Client State Recovery | `client-state-recovery` | CSR 재방문 화면, 영속 캐시, 낙관적 변경의 복구 경계 | [[client-state-recovery/recoverable-client-state]] |

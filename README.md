@@ -45,17 +45,19 @@ flowchart LR
 - 구조 계약: [`knowledge/SCHEMA.md`](knowledge/SCHEMA.md)
 - Topic router: [`knowledge/index.md`](knowledge/index.md)
 - 검사기: [`scripts/wiki-lint.py`](scripts/wiki-lint.py)
+- 공개 사례: [Client State Recovery](knowledge/client-state-recovery/index.md)
+- 근거 기반 질의: [공개 근거로 클라이언트 상태 복구 전략 조회하기](case-studies/client-state-recovery-query.md)
 
 ### Agent Skills
 
 Skill은 단일 prompt가 아니라 trigger, 입력, 작업 경계, 산출물, 종료 조건과 smoke case를 가진 실행 계약입니다.
 
-| Skill | 역할 |
-| --- | --- |
-| [`build-production-ui`](skills/build-production-ui/SKILL.md) | 여러 UI 방향을 같은 제품 계약에서 비교하고 브라우저 근거와 승인 gate를 거쳐 통합합니다. |
-| [`research-workflow`](skills/research-workflow/SKILL.md) | 출처를 Knowledge page로 정규화하고 topic과 문서 lifecycle을 관리합니다. |
-| [`research-query`](skills/research-query/SKILL.md) | Knowledge graph에서 claim과 출처를 연결하고 evidence gap을 분리합니다. |
-| [`research-lint`](skills/research-lint/SKILL.md) | 구조 검사 결과를 severity와 수정 책임에 따라 분류합니다. |
+| Skill | 역할 | 실제 산출물 |
+| --- | --- | --- |
+| [`build-production-ui`](skills/build-production-ui/SKILL.md) | 여러 UI 방향을 같은 제품 계약에서 비교하고 브라우저 근거와 승인 gate를 거쳐 통합합니다. | [UI 비교 사례](case-studies/ui-candidate-evaluation.md) |
+| [`research-workflow`](skills/research-workflow/SKILL.md) | 출처를 Knowledge page로 정규화하고 topic과 문서 lifecycle을 관리합니다. | [Client State Recovery topic](knowledge/client-state-recovery/index.md) |
+| [`research-query`](skills/research-query/SKILL.md) | Knowledge graph에서 claim과 출처를 연결하고 evidence gap을 분리합니다. | [상태 복구 전략 질의](case-studies/client-state-recovery-query.md) |
+| [`research-lint`](skills/research-lint/SKILL.md) | 구조 검사 결과를 severity와 수정 책임에 따라 분류합니다. | [동일 사례의 Quality gate](case-studies/client-state-recovery-query.md#quality-gate) |
 
 ## 시작하기
 
