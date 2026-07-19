@@ -1,8 +1,8 @@
 ---
-workflow_version: 1
+workflow_version: 2
 status: draft
 target: ""
-mode: ""
+mode: redesign
 anchor: ""
 baseline: ""
 acceptance_source: ""
@@ -13,7 +13,7 @@ approved_direction: ""
 capture_manifest: ""
 ---
 
-# UI Decision Packet
+# Production UI Decision Packet
 
 ## Target와 사용자 Job
 
@@ -24,11 +24,15 @@ capture_manifest: ""
 ## Invariant와 Non-goal
 
 - Existing content/function invariant:
-- Data/handler/routing/i18n/accessibility/state invariant:
-- Approved additive contract:
+- Existing data/handler/routing/i18n/a11y/state invariant:
+- Approved additive contract for new page/section:
 - Non-goal:
 
-## Acceptance와 Evidence
+## Acceptance와 Evidence Trace
+
+- Acceptance source:
+- Edge cases:
+- TBD와 owner/decision trigger:
 
 | ID | Actor/trigger/state | Expected outcome | Planned/actual evidence | Status |
 | --- | --- | --- | --- | --- |
@@ -37,22 +41,24 @@ capture_manifest: ""
 ## Anchor Decision
 
 - Decision: company / non-company / none
-- Source:
-- Local signal mapping:
+- Evidence/source:
+- Local signal mapping: color, typography, spacing/density, composition, interaction/motion
 
 ## Baseline
 
+- Type: current-screen / adjacent-surface / shared-shell
 - Route/params와 data state/source:
-- Desktop/mobile viewport:
-- Theme/locale:
+- Exact desktop/mobile viewport:
+- Theme/locale axes:
 - Environment/source revision:
 - Sensitive-data handling:
+- Capture gap:
 
 ## Capture Manifest
 
-| Artifact | Role | Candidate | Viewport | Route/state/theme/locale | Selection | Evidence class | Sensitive-data handling |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| | | | | | | | |
+| Artifact path | Role | Candidate | Viewport | Route/state/theme/locale | Environment/source | Selection | Evidence class | Sensitive-data handling |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| | baseline / candidate / final / state | | | | | selected / rejected / N/A | direction / production-correctness | |
 
 ## Four Directions
 
@@ -68,30 +74,47 @@ capture_manifest: ""
 - Candidate:
   - Preview surface:
   - State coverage:
-  - Evidence:
+  - Screenshot paths:
+  - Artifact roles:
+  - Score:
+  - Selection/rejection reason:
+- Candidate:
+  - Preview surface:
+  - State coverage:
+  - Screenshot paths:
+  - Artifact roles:
   - Score:
   - Selection/rejection reason:
 
-## Final Decision와 승인
+## Final Synthesis와 승인
 
 - Decision mode: select-one / synthesize
-- Base candidate:
+- Selected base candidate:
 - 가져올 요소:
 - 제외할 요소:
+- 영향 파일:
 - 남은 위험:
-- 승인 근거:
+- 승인 evidence/date:
 
-## Integration과 Cleanup
+## Terminal State와 Recovery
 
-- Terminal state:
+- Terminal state: approved / rejected / cancelled / integration-failed / verified
+- Reason/evidence:
+- Candidate-only cleanup:
+- Previous production behavior recovery 또는 blocker/recovery plan:
+
+## Production Integration과 Cleanup
+
 - Integrated files:
 - Removed preview code:
-- Recovery 또는 blocker:
+- Preserved evidence:
 
 ## Verification
 
 - Commands/results:
-- Acceptance coverage:
-- Browser/keyboard/accessibility evidence:
+- Acceptance→evidence coverage:
+- Browser/keyboard/a11y evidence:
+- Accessible name/state announcement, target size, zoom/reflow/text spacing evidence:
+- Assistive-technology/service-flow evidence 또는 risk-based N/A 이유:
 - Regression evidence:
 - Gaps:
