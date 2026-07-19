@@ -3,9 +3,9 @@ schema_version: 1
 type: source
 tags: [client-state-recovery]
 sources:
-  - "https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/packages/tx/README.md — accessed 2026-07-15"
-  - "https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/packages/tx/tests/transaction.test.ts — accessed 2026-07-15"
-  - "https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/apps/playground/tests/tx-rollback.spec.ts — accessed 2026-07-15"
+  - "https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/packages/tx/README.md — accessed 2026-07-19"
+  - "https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/packages/tx/tests/transaction.test.ts — accessed 2026-07-19"
+  - "https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/apps/playground/tests/tx-rollback.spec.ts — accessed 2026-07-19"
 relations:
   depends_on: []
   contrasts_with: []
@@ -15,7 +15,7 @@ relations:
   supersedes: []
 confidence: 0.9
 status: current
-updated: 2026-07-15
+updated: 2026-07-19
 ---
 
 # FirstTx Tx의 compensating rollback 경계
@@ -48,6 +48,6 @@ Compensation은 database rollback과 같은 원자성 보장이 아니라 best-e
 
 ## 출처
 
-- [Tx package README](https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/packages/tx/README.md) — accessed 2026-07-15
-- [Transaction unit tests](https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/packages/tx/tests/transaction.test.ts) — accessed 2026-07-15
-- [Rollback Playwright scenario](https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/apps/playground/tests/tx-rollback.spec.ts) — accessed 2026-07-15
+- [Tx package README](https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/packages/tx/README.md) — accessed 2026-07-19
+- [Transaction unit tests](https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/packages/tx/tests/transaction.test.ts) — accessed 2026-07-19
+- [Rollback Playwright scenario](https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/apps/playground/tests/tx-rollback.spec.ts) — accessed 2026-07-19

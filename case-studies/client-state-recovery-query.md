@@ -6,7 +6,7 @@ CSR 애플리케이션에서 재방문 화면을 빠르게 보여주고, cached 
 
 ## 입력
 
-FirstTx 공개 저장소의 세 package 문서와 unit test, Playground의 Playwright scenario를 source로 사용했다. 긴 원문을 복사하지 않고 다음 네 page로 claim과 한계를 분리했다.
+FirstTx 공개 저장소의 세 package 문서와 unit test, Playground의 Playwright scenario를 하나의 공개 commit에 고정해 source로 사용했다. 긴 원문을 복사하지 않고 다음 네 page로 claim과 한계를 분리했다.
 
 - [Prepaint visual replay](../knowledge/client-state-recovery/sources/firsttx-prepaint.md)
 - [Local-First staleness](../knowledge/client-state-recovery/sources/firsttx-local-first.md)
@@ -19,7 +19,7 @@ FirstTx 공개 저장소의 세 package 문서와 unit test, Playground의 Playw
 
 | Facet | 선택 | 이유 |
 | --- | --- | --- |
-| React bundle 전 재방문 화면 | visual snapshot overlay | 이전 DOM은 현재 UI가 아니므로 비상호작용 상태로 격리하고 실제 commit 뒤 제거해야 함 |
+| React bundle 전 재방문 화면 | opt-in visual snapshot overlay | 민감하지 않은 exact route만 허용하고 이전 DOM은 비상호작용 상태로 격리한 뒤 실제 commit 후 제거해야 함 |
 | React가 사용할 재방문 데이터 | persistent model cache | cache availability와 freshness를 분리하고 stale data는 server로 재검증해야 함 |
 | optimistic multi-step 변경 | compensating transaction | 완료된 side effect만 역순 보상하고 retry·timeout·reconciliation을 별도 처리해야 함 |
 
@@ -28,6 +28,7 @@ FirstTx 공개 저장소의 세 package 문서와 unit test, Playground의 Playw
 ## 근거와 주장 강도
 
 - 공개 package 문서와 unit/E2E test가 함께 확인하는 동작만 현재 claim으로 채택했다.
+- Prepaint의 route opt-in, payload·schema 정책과 HTML/CSS 민감정보 경계를 기능 설명과 별도의 안전 계약으로 유지했다.
 - `prepaint-heavy` metrics의 96ms FCP 차이는 특정 Chromium scenario 기록으로만 남겼다. 전체 준비 시간 단축이나 보편적인 사용자 성능 향상으로 표현하지 않았다.
 - Local-First는 concurrent write conflict를 해결하지 않고, Tx는 server와 browser storage의 원자적 commit을 제공하지 않는다는 제한을 결론에 포함했다.
 
@@ -39,6 +40,16 @@ FirstTx 공개 저장소의 세 package 문서와 unit test, Playground의 Playw
 - compensation 자체가 실패했을 때의 운영 절차
 
 이 항목은 현재 공개 source가 답하지 않으므로 구현 완료 주장이나 성능 수치로 승격하지 않는다.
+
+## AI와 사람의 역할
+
+| AI가 가속한 작업 | 사람이 소유한 결정 |
+| --- | --- |
+| 공개 문서·test에서 claim 후보 추출, page 초안과 관계 연결 | 질문의 facet, 허용 source 범위와 immutable revision 선택 |
+| schema lint, routing audit와 source link 대조 | visual·data·mutation 경계를 분리하고 과장된 claim을 제외한 판단 |
+| 반복 가능한 query와 evidence-gap 목록 생성 | confidence, 성능 기록의 해석 범위와 미확인 항목 승인 |
+
+출처가 존재한다는 사실만으로 claim을 채택하지 않는다. 문서와 test가 같은 동작을 지지하는지, 반례와 한계가 결론에 남아 있는지를 사람이 최종 판정했다.
 
 ## Quality gate
 

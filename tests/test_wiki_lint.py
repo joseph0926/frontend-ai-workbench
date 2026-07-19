@@ -3,11 +3,17 @@ import sys
 import tempfile
 import textwrap
 import unittest
+import importlib.util
+from copy import deepcopy
+from datetime import date
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 LINTER = ROOT / "scripts" / "wiki-lint.py"
+SPEC = importlib.util.spec_from_file_location("wiki_lint", LINTER)
+WIKI_LINT = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(WIKI_LINT)
 
 
 def page(title, links):
@@ -113,6 +119,65 @@ class WikiLintTest(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertIn("URL 출처에 접근일", result.stdout)
+
+
+class WikiLintFrontmatterTypeTest(unittest.TestCase):
+    def setUp(self):
+        self.frontmatter = {
+            "schema_version": 1,
+            "type": "concept",
+            "tags": ["uiux"],
+            "sources": ["https://example.com — accessed 2026-07-19"],
+            "relations": {key: [] for key in WIKI_LINT.VALID_RELATIONS},
+            "confidence": 0.8,
+            "status": "current",
+            "updated": date(2026, 7, 19),
+        }
+        self.body = "[[uiux/one]] [[uiux/two]]\n\n## Sources\n- https://example.com — accessed 2026-07-19\n"
+
+    def validate(self, frontmatter):
+        target = WIKI_LINT.WikiPage(
+            Path("knowledge/uiux/concepts/probe.md"),
+            "",
+            frontmatter,
+            self.body,
+        )
+        return WIKI_LINT.validate_page(target, {"uiux/one", "uiux/two"}, {"uiux"})
+
+    def assert_error(self, field, value, message):
+        frontmatter = deepcopy(self.frontmatter)
+        frontmatter[field] = value
+        issues = self.validate(frontmatter)
+        self.assertTrue(
+            any(issue.severity == "error" and message in issue.message for issue in issues),
+            [issue.message for issue in issues],
+        )
+
+    def test_valid_frontmatter_passes(self):
+        self.assertEqual(self.validate(self.frontmatter), [])
+
+    def test_frontmatter_must_be_mapping(self):
+        issues = self.validate([])
+        self.assertTrue(any("frontmatter는 mapping" in issue.message for issue in issues))
+
+    def test_type_and_status_must_be_strings(self):
+        self.assert_error("type", [], "type은 문자열")
+        self.assert_error("status", [], "status는 문자열")
+
+    def test_sources_and_tags_must_be_string_lists(self):
+        self.assert_error("sources", {"url": "https://example.com"}, "sources는 문자열 리스트")
+        self.assert_error("tags", [{}], "tags는 문자열 리스트")
+
+    def test_relations_must_be_mapping_of_string_lists(self):
+        self.assert_error("relations", "bad", "relations는 mapping")
+        relations = deepcopy(self.frontmatter["relations"])
+        relations["depends_on"] = "[[uiux/one]]"
+        self.assert_error("relations", relations, "relations 값은 문자열 리스트")
+
+    def test_date_and_numeric_fields_are_typed(self):
+        self.assert_error("updated", "2026/07/19", "updated는 YYYY-MM-DD YAML date")
+        self.assert_error("confidence", True, "confidence는 0.0~1.0 숫자")
+        self.assert_error("schema_version", True, "schema_version은 정수")
 
 
 if __name__ == "__main__":

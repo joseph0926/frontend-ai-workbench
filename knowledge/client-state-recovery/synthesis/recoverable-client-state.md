@@ -3,8 +3,8 @@ schema_version: 1
 type: synthesis
 tags: [client-state-recovery]
 sources:
-  - "https://github.com/joseph0926/firsttx/tree/7a13950d0268c3b9d6655b06c2398f330aaf9123/packages — accessed 2026-07-15"
-  - "https://github.com/joseph0926/firsttx/tree/7a13950d0268c3b9d6655b06c2398f330aaf9123/apps/playground/tests — accessed 2026-07-15"
+  - "https://github.com/joseph0926/firsttx/tree/df1e923d531a06ff5ee8687ae2e5a9369e212186/packages — accessed 2026-07-19"
+  - "https://github.com/joseph0926/firsttx/tree/df1e923d531a06ff5ee8687ae2e5a9369e212186/apps/playground/tests — accessed 2026-07-19"
 relations:
   depends_on:
     - "[[client-state-recovery/firsttx-prepaint]]"
@@ -17,7 +17,7 @@ relations:
   supersedes: []
 confidence: 0.85
 status: current
-updated: 2026-07-15
+updated: 2026-07-19
 ---
 
 # 복구 가능한 클라이언트 상태 전환
@@ -42,7 +42,7 @@ updated: 2026-07-15
 
 ### 1. 이전 화면은 현재 UI가 아니다
 
-Prepaint snapshot은 조작할 수 없는 임시 화면이어야 하고 React root와 격리되어야 한다. 실제 화면이 준비되면 반드시 제거한다. 공개 handoff E2E는 이 경계를 bundle 지연 조건에서 확인한다. 근거: [[client-state-recovery/firsttx-prepaint]].
+Prepaint snapshot은 명시적으로 허용한 민감하지 않은 exact route에서만 만들고, 조작할 수 없는 임시 화면으로 React root와 격리해야 한다. 실제 화면이 준비되면 반드시 제거한다. 공개 handoff E2E는 이 경계를 bundle 지연, route별 key와 schema migration 조건에서 확인한다. 근거: [[client-state-recovery/firsttx-prepaint]].
 
 ### 2. cached data는 최신 데이터가 아니다
 
@@ -68,5 +68,5 @@ Tx의 역순 보상은 client side effect를 복구하는 실행 규칙이지 se
 
 ## 출처
 
-- [FirstTx packages at source revision](https://github.com/joseph0926/firsttx/tree/7a13950d0268c3b9d6655b06c2398f330aaf9123/packages) — accessed 2026-07-15
-- [FirstTx playground tests at source revision](https://github.com/joseph0926/firsttx/tree/7a13950d0268c3b9d6655b06c2398f330aaf9123/apps/playground/tests) — accessed 2026-07-15
+- [FirstTx packages at source revision](https://github.com/joseph0926/firsttx/tree/df1e923d531a06ff5ee8687ae2e5a9369e212186/packages) — accessed 2026-07-19
+- [FirstTx playground tests at source revision](https://github.com/joseph0926/firsttx/tree/df1e923d531a06ff5ee8687ae2e5a9369e212186/apps/playground/tests) — accessed 2026-07-19

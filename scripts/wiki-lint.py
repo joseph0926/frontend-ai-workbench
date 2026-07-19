@@ -156,7 +156,13 @@ def validate_page(page, all_slugs, taxonomy):
     p = page.path
 
     fm = page.frontmatter
-    if isinstance(fm, dict) and fm.get("status") == "deprecated":
+    if fm is None:
+        issues.append(Issue("error", p, "frontmatter 없음 또는 파싱 실패"))
+        return issues
+    if not isinstance(fm, dict):
+        issues.append(Issue("error", p, "frontmatter는 mapping이어야 함"))
+        return issues
+    if fm.get("status") == "deprecated":
         targets = []
         sb = fm.get("superseded_by") or []
         if isinstance(sb, str):
@@ -170,62 +176,85 @@ def validate_page(page, all_slugs, taxonomy):
             if t and t not in all_slugs:
                 issues.append(Issue("error", p, f"deprecated superseded_by 대상 부재: {t!r}"))
         return issues
-    if fm is None:
-        issues.append(Issue("error", p, "frontmatter 없음 또는 파싱 실패"))
-        return issues
-    else:
-        missing = REQUIRED_FIELDS - fm.keys()
-        if missing:
-            issues.append(Issue("error", p, f"frontmatter 필수 필드 누락: {sorted(missing)}"))
+    missing = REQUIRED_FIELDS - fm.keys()
+    if missing:
+        issues.append(Issue("error", p, f"frontmatter 필수 필드 누락: {sorted(missing)}"))
 
-        if "schema_version" in fm and fm["schema_version"] != CURRENT_SCHEMA_VERSION:
-            issues.append(Issue("error", p, f"schema_version 값 불일치: {fm['schema_version']!r} (현재 {CURRENT_SCHEMA_VERSION})"))
+    if "schema_version" in fm:
+        schema_version = fm["schema_version"]
+        if isinstance(schema_version, bool) or not isinstance(schema_version, int):
+            issues.append(Issue("error", p, f"schema_version은 정수여야 함: {schema_version!r}"))
+        elif schema_version != CURRENT_SCHEMA_VERSION:
+            issues.append(Issue("error", p, f"schema_version 값 불일치: {schema_version!r} (현재 {CURRENT_SCHEMA_VERSION})"))
 
-        if "type" in fm and fm["type"] not in VALID_TYPES:
-            issues.append(Issue("error", p, f"type 값이 enum 밖: {fm['type']!r}"))
+    if "type" in fm:
+        page_type = fm["type"]
+        if not isinstance(page_type, str):
+            issues.append(Issue("error", p, f"type은 문자열이어야 함: {page_type!r}"))
+        elif page_type not in VALID_TYPES:
+            issues.append(Issue("error", p, f"type 값이 enum 밖: {page_type!r}"))
 
-        if "status" in fm and fm["status"] not in VALID_STATUS:
-            issues.append(Issue("error", p, f"status 값이 enum 밖: {fm['status']!r}"))
+    if "status" in fm:
+        status = fm["status"]
+        if not isinstance(status, str):
+            issues.append(Issue("error", p, f"status는 문자열이어야 함: {status!r}"))
+        elif status not in VALID_STATUS:
+            issues.append(Issue("error", p, f"status 값이 enum 밖: {status!r}"))
 
-        if "tags" in fm:
-            tags = fm["tags"] or []
-            if not isinstance(tags, list):
-                issues.append(Issue("error", p, "tags는 리스트여야 함"))
-            else:
-                out_of_taxonomy = [t for t in tags if t not in taxonomy]
-                if out_of_taxonomy:
-                    issues.append(Issue("error", p, f"tags가 taxonomy 밖: {out_of_taxonomy}"))
-                if len(tags) > 5:
-                    issues.append(Issue("warning", p, f"tags 5개 초과: {len(tags)}개"))
+    if "tags" in fm:
+        tags = fm["tags"]
+        if not isinstance(tags, list) or any(not isinstance(tag, str) for tag in tags):
+            issues.append(Issue("error", p, "tags는 문자열 리스트여야 함"))
+        else:
+            out_of_taxonomy = [tag for tag in tags if tag not in taxonomy]
+            if out_of_taxonomy:
+                issues.append(Issue("error", p, f"tags가 taxonomy 밖: {out_of_taxonomy}"))
+            if len(tags) > 5:
+                issues.append(Issue("warning", p, f"tags 5개 초과: {len(tags)}개"))
 
-        if "confidence" in fm:
-            c = fm["confidence"]
-            if not isinstance(c, (int, float)) or not 0.0 <= c <= 1.0:
-                issues.append(Issue("error", p, f"confidence는 0.0~1.0 범위여야 함: {c!r}"))
-            elif c <= 0.5 and "근거 강도 메모" not in page.body:
-                issues.append(Issue("error", p, "confidence 0.5 이하인데 `## 근거 강도 메모` 부재"))
+    if "sources" in fm:
+        sources = fm["sources"]
+        if not isinstance(sources, list) or any(not isinstance(source, str) for source in sources):
+            issues.append(Issue("error", p, "sources는 문자열 리스트여야 함"))
 
-        if "relations" in fm:
-            rels = fm["relations"] or {}
-            if isinstance(rels, dict):
-                unknown = set(rels.keys()) - VALID_RELATIONS
-                if unknown:
-                    issues.append(Issue("error", p, f"relations 키가 enum 밖: {sorted(unknown)}"))
-                rel_missing = VALID_RELATIONS - set(rels.keys())
-                if rel_missing:
-                    issues.append(Issue("error", p, f"relations 6개 키 중 누락: {sorted(rel_missing)} (빈 배열로라도 명시 필요)"))
+    if "confidence" in fm:
+        confidence = fm["confidence"]
+        if isinstance(confidence, bool) or not isinstance(confidence, (int, float)) or not 0.0 <= confidence <= 1.0:
+            issues.append(Issue("error", p, f"confidence는 0.0~1.0 숫자여야 함: {confidence!r}"))
+        elif confidence <= 0.5 and "근거 강도 메모" not in page.body:
+            issues.append(Issue("error", p, "confidence 0.5 이하인데 `## 근거 강도 메모` 부재"))
 
-        if "updated" in fm:
-            u = fm["updated"]
-            if isinstance(u, (date, datetime)):
-                u_date = u if isinstance(u, date) else u.date()
-                if (date.today() - u_date).days > STALE_DAYS:
-                    issues.append(Issue("warning", p, f"{STALE_DAYS}일 이상 미갱신 ({u_date})"))
+    if "relations" in fm:
+        relations = fm["relations"]
+        if not isinstance(relations, dict):
+            issues.append(Issue("error", p, "relations는 mapping이어야 함"))
+        elif any(not isinstance(key, str) for key in relations):
+            issues.append(Issue("error", p, "relations 키는 문자열이어야 함"))
+        else:
+            unknown = set(relations) - VALID_RELATIONS
+            if unknown:
+                issues.append(Issue("error", p, f"relations 키가 enum 밖: {sorted(unknown)}"))
+            rel_missing = VALID_RELATIONS - set(relations)
+            if rel_missing:
+                issues.append(Issue("error", p, f"relations 6개 키 중 누락: {sorted(rel_missing)} (빈 배열로라도 명시 필요)"))
+            invalid_values = [
+                key for key, targets in relations.items()
+                if not isinstance(targets, list) or any(not isinstance(target, str) for target in targets)
+            ]
+            if invalid_values:
+                issues.append(Issue("error", p, f"relations 값은 문자열 리스트여야 함: {sorted(invalid_values)}"))
 
-        if fm.get("type") == "synthesis":
-            ref_count = len(page.wikilinks)
-            if ref_count < 3:
-                issues.append(Issue("error", p, f"synthesis 페이지는 최소 3개 참조 필요 (현재 {ref_count})"))
+    if "updated" in fm:
+        updated = fm["updated"]
+        if type(updated) is not date:
+            issues.append(Issue("error", p, f"updated는 YYYY-MM-DD YAML date여야 함: {updated!r}"))
+        elif (date.today() - updated).days > STALE_DAYS:
+            issues.append(Issue("warning", p, f"{STALE_DAYS}일 이상 미갱신 ({updated})"))
+
+    if fm.get("type") == "synthesis":
+        ref_count = len(page.wikilinks)
+        if ref_count < 3:
+            issues.append(Issue("error", p, f"synthesis 페이지는 최소 3개 참조 필요 (현재 {ref_count})"))
 
     if len(page.wikilinks) < MIN_WIKILINKS:
         issues.append(Issue("error", p, f"outbound [[wikilink]] {MIN_WIKILINKS}개 미만 (현재 {len(page.wikilinks)})"))

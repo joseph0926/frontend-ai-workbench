@@ -3,9 +3,9 @@ schema_version: 1
 type: source
 tags: [client-state-recovery]
 sources:
-  - "https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/packages/local-first/README.md — accessed 2026-07-15"
-  - "https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/packages/local-first/tests/model-ttl-optional.test.ts — accessed 2026-07-15"
-  - "https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/apps/playground/tests/sync-staleness.spec.ts — accessed 2026-07-15"
+  - "https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/packages/local-first/README.md — accessed 2026-07-19"
+  - "https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/packages/local-first/tests/model-ttl-optional.test.ts — accessed 2026-07-19"
+  - "https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/apps/playground/tests/sync-staleness.spec.ts — accessed 2026-07-19"
 relations:
   depends_on: []
   contrasts_with: []
@@ -15,7 +15,7 @@ relations:
   supersedes: []
 confidence: 0.9
 status: current
-updated: 2026-07-15
+updated: 2026-07-19
 ---
 
 # FirstTx Local-First의 staleness 경계
@@ -48,6 +48,6 @@ package 문서는 concurrent write의 conflict detection을 제공하지 않으�
 
 ## 출처
 
-- [Local-First package README](https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/packages/local-first/README.md) — accessed 2026-07-15
-- [TTL behavior unit tests](https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/packages/local-first/tests/model-ttl-optional.test.ts) — accessed 2026-07-15
-- [Staleness Playwright scenario](https://github.com/joseph0926/firsttx/blob/7a13950d0268c3b9d6655b06c2398f330aaf9123/apps/playground/tests/sync-staleness.spec.ts) — accessed 2026-07-15
+- [Local-First package README](https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/packages/local-first/README.md) — accessed 2026-07-19
+- [TTL behavior unit tests](https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/packages/local-first/tests/model-ttl-optional.test.ts) — accessed 2026-07-19
+- [Staleness Playwright scenario](https://github.com/joseph0926/firsttx/blob/df1e923d531a06ff5ee8687ae2e5a9369e212186/apps/playground/tests/sync-staleness.spec.ts) — accessed 2026-07-19
