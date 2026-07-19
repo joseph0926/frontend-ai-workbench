@@ -46,7 +46,7 @@ jobs:
           python -m unittest discover -s tests
 
       - name: Install browser
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm --filter @frontend-ai-workbench/ui-lab exec playwright install --with-deps chromium
 
       - name: Run browser matrix
         env:
