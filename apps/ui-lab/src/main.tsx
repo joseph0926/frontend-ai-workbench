@@ -18,10 +18,13 @@ window.__LAB__ = experiments.map((e) => ({
   candidates: e.candidates.map((c) => c.id),
 }));
 
-const router = createBrowserRouter([
-  { path: "/", element: <Gallery /> },
-  { path: "/view/:slug/:cand/:state", element: <View /> },
-]);
+const router = createBrowserRouter(
+  [
+    { path: "/", element: <Gallery /> },
+    { path: "/view/:slug/:cand/:state", element: <View /> },
+  ],
+  { basename: import.meta.env.BASE_URL },
+);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

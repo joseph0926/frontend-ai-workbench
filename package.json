@@ -2,8 +2,12 @@
   "name": "frontend-ai-workbench",
   "private": true,
   "packageManager": "pnpm@11.10.0",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "ui:dev": "pnpm --filter @frontend-ai-workbench/ui-lab dev",
+    "ui:preview": "pnpm --filter @frontend-ai-workbench/ui-lab preview",
     "ui:typecheck": "pnpm --filter @frontend-ai-workbench/ui-lab typecheck",
     "ui:build": "pnpm --filter @frontend-ai-workbench/ui-lab build",
     "ui:shots": "pnpm --filter @frontend-ai-workbench/ui-lab shots"

@@ -1,0 +1,133 @@
+name: Verify and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile
+          python -m pip install -r requirements.txt
+
+      - name: Verify UI and public contracts
+        run: |
+          pnpm ui:typecheck
+          pnpm ui:build
+          python scripts/wiki-lint.py knowledge
+          python scripts/wiki-lint.py knowledge --audit-manifest --seed public-ci
+          python scripts/wiki-lint.py knowledge --routing-audit
+          python -m unittest discover -s tests
+
+      - name: Install browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run browser matrix
+        env:
+          LAB_URL: http://127.0.0.1:3001
+          LAB_ARTIFACT_DIR: ${{ runner.temp }}/ui-lab-evidence
+        run: |
+          pnpm ui:preview --host 127.0.0.1 > "${RUNNER_TEMP}/ui-lab-preview.log" 2>&1 &
+          for attempt in {1..30}; do
+            if curl --fail --silent "${LAB_URL}" > /dev/null; then
+              break
+            fi
+            if [ "${attempt}" -eq 30 ]; then
+              sed -n '1,200p' "${RUNNER_TEMP}/ui-lab-preview.log"
+              exit 1
+            fi
+            sleep 1
+          done
+          pnpm ui:shots
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ui-lab-browser-evidence
+          path: ${{ runner.temp }}/ui-lab-evidence
+          if-no-files-found: warn
+          retention-days: 14
+
+  pages-build:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build Gallery
+        env:
+          GITHUB_PAGES: "true"
+        run: |
+          pnpm ui:build
+          cp apps/ui-lab/dist/index.html apps/ui-lab/dist/404.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: apps/ui-lab/dist
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: pages-build
+    runs-on: ubuntu-latest
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
