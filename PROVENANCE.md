@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | `content-discovery` UI Lab | 개인 UI Lab에서 운영한 후보 비교 workflow | repository-owned fixture와 세 탐색 모델로 재구성하고 개인 dependency 제거 | public baseline `145e32d`; workflow 대조 2026-07-19 |
 | `build-production-ui` | 개인 UI Lab에서 운영한 production UI workflow | repo-local packet과 references만 유지하고 중앙 Knowledge·배포 계약 제거 | 마지막 대조 2026-07-19 |
-| Research Skills와 wiki linter | 개인 Knowledge system에서 운영한 research workflow | 4-page 공개 graph와 그 graph를 검증하는 최소 계약으로 축약 | 마지막 대조 2026-07-19 |
+| Research Skills와 wiki linter | 개인 Knowledge system에서 운영한 research workflow | 4-page 공개 graph와 그 graph를 검증하는 최소 계약으로 축약하고 query source-set drift와 새 U+FFFD를 차단 | 마지막 대조 2026-07-22 |
 | Client State Recovery | FirstTx 공개 문서, test와 metric artifact | 긴 원문 대신 source page 3개와 synthesis 1개로 정규화 | [`df1e923`](https://github.com/joseph0926/firsttx/tree/df1e923d531a06ff5ee8687ae2e5a9369e212186), accessed 2026-07-19 |
 
 ## 공개용 변경 원칙

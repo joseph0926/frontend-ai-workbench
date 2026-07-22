@@ -36,12 +36,14 @@ repo-local knowledge base의 쓰기 workflow를 담당한다. Page type, frontma
 
 ```bash
 python scripts/wiki-lint.py knowledge/<topic>/
+python scripts/verify-no-new-ufffd.py <수정·신규 텍스트 파일>...
 ```
 
 - error 0이 필수다.
 - topic 경계나 page lifecycle을 바꿨으면 전체 `knowledge/`도 검사한다.
 - 외부 URL과 접근일, 관계 대상과 index 등록을 직접 확인한다.
-- 새로 작성한 한글 문서에 U+FFFD가 없는지 확인한다.
+- U+FFFD 검사는 변경한 텍스트 파일을 명시적으로 전달한다. Tracked 파일은 `HEAD` 대비 추가 줄만, untracked 파일은 전체를 검사해 기존 데이터와 새 오염을 구분한다.
+- U+FFFD 검사 결과가 non-zero면 완료하지 않는다.
 
 ## 경계
 

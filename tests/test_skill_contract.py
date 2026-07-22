@@ -75,6 +75,27 @@ class SkillContractTest(unittest.TestCase):
         ]:
             self.assertIn(phrase, matrix)
 
+    def test_research_query_covers_canonical_drift(self):
+        skill_dir = SKILLS / "research-query"
+        _, skill = frontmatter(skill_dir / "SKILL.md")
+        matrix = (skill_dir / "references" / "test-cases.md").read_text(encoding="utf-8")
+        for phrase in [
+            "query source set",
+            "pre-existing-dirty-preserved",
+            "drift-blocked",
+        ]:
+            self.assertIn(phrase, skill)
+            self.assertIn(phrase, matrix)
+
+    def test_research_workflow_covers_new_ufffd(self):
+        skill_dir = SKILLS / "research-workflow"
+        _, skill = frontmatter(skill_dir / "SKILL.md")
+        matrix = (skill_dir / "references" / "test-cases.md").read_text(encoding="utf-8")
+        self.assertIn("scripts/verify-no-new-ufffd.py", skill)
+        self.assertIn("Tracked 파일", skill)
+        for phrase in ["historical U+FFFD baseline", "new tracked U+FFFD", "new untracked U+FFFD"]:
+            self.assertIn(phrase, matrix)
+
 
 if __name__ == "__main__":
     unittest.main()
